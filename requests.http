@@ -1,0 +1,53 @@
+### UC1 Sortiment
+GET http://localhost:5001/api/laptops
+
+### UC2 Nach Marke / Preis filtern
+GET http://localhost:5001/api/laptops?brand=hp
+
+###
+GET http://localhost:5001/api/laptops?maxPrice=800
+
+### UC3 Fast ausverkauft
+GET http://localhost:5001/api/laptops?lowStockBelow=3
+
+### UC4 Laptop anlegen
+POST http://localhost:5001/api/laptops
+Content-Type: application/json
+
+{ "brand": "Dell", "model": "XPS 13", "cpu": "Intel Core Ultra 5", "ramGb": 16, "storageGb": 512, "price": 1499.00, "stock": 10 }
+
+### UC4 Kunde anlegen
+POST http://localhost:5001/api/customers
+Content-Type: application/json
+
+{ "name": "Lena Moser", "email": "lena.moser@example.com" }
+
+### UC5 Laptop verkaufen (customer.id 4 und laptop.id 5 aus den Antworten oben)
+POST http://localhost:5001/api/sales
+Content-Type: application/json
+
+{ "quantity": 2, "saleDate": "2026-10-12", "customer": { "id": 4 }, "laptop": { "id": 5 } }
+
+### Bestand prüfen
+GET http://localhost:5001/api/laptops/5
+
+### UC6 Zu wenig auf Lager -> 409
+POST http://localhost:5001/api/sales
+Content-Type: application/json
+
+{ "quantity": 3, "customer": { "id": 1 }, "laptop": { "id": 4 } }
+
+### UC7 Verkauf stornieren
+DELETE http://localhost:5001/api/sales/2
+
+### UC8 Käufe eines Kunden
+GET http://localhost:5001/api/customers/1/sales
+
+### UC8 Fehlerfälle
+GET http://localhost:5001/api/laptops/99999
+
+###
+DELETE http://localhost:5001/api/laptops/3
+
+###
+DELETE http://localhost:5001/api/customers/1
