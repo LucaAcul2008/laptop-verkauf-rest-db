@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laptop-Verkauf</title>
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  /* Catppuccin Latte (hell) und Macchiato (dunkel), https://catppuccin.com */
+  :root, :root[data-theme="light"] {
+    color-scheme: light;
+    --ctp-rosewater: #dc8a78; --ctp-pink: #ea76cb; --ctp-mauve: #8839ef; --ctp-red: #d20f39;
+    --ctp-peach: #fe640b; --ctp-yellow: #df8e1d; --ctp-green: #40a02b; --ctp-teal: #179299;
+    --ctp-blue: #1e66f5; --ctp-lavender: #7287fd;
+    --ctp-text: #4c4f69; --ctp-subtext0: #6c6f85; --ctp-surface0: #ccd0da; --ctp-surface1: #bcc0cc;
+    --ctp-base: #eff1f5; --ctp-mantle: #e6e9ef; --ctp-crust: #dce0e8;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ctp-rosewater: #f4dbd6; --ctp-pink: #f5bde6; --ctp-mauve: #c6a0f6; --ctp-red: #ed8796;
+    --ctp-peach: #f5a97f; --ctp-yellow: #eed49f; --ctp-green: #a6da95; --ctp-teal: #8bd5ca;
+    --ctp-blue: #8aadf4; --ctp-lavender: #b7bdf8;
+    --ctp-text: #cad3f5; --ctp-subtext0: #a5adcb; --ctp-surface0: #363a4f; --ctp-surface1: #494d64;
+    --ctp-base: #24273a; --ctp-mantle: #1e2030; --ctp-crust: #181926;
+  }
+  :root {
+    --bg: var(--ctp-base); --card: var(--ctp-mantle); --text: var(--ctp-text); --muted: var(--ctp-subtext0);
+    --line: var(--ctp-surface0); --accent: var(--ctp-mauve); --accent-ink: var(--ctp-crust);
+    --danger: var(--ctp-red); --warn: var(--ctp-peach); --ok: var(--ctp-green);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 20px 16px 0; max-width: 1000px; margin: 0 auto; }
+  .head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  #theme-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; cursor: pointer; }
+  #theme-toggle:hover { border-color: var(--accent); }
+  #theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-toggle .ico { font-size: 16px; line-height: 1; }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  header p { margin: 0; color: var(--muted); }
+  header a { color: var(--accent); }
+  nav { display: flex; gap: 4px; margin-top: 16px; border-bottom: 1px solid var(--line); }
+  nav button { background: none; border: 0; padding: 10px 14px; font: inherit; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  nav button.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+  main { max-width: 1000px; margin: 0 auto; padding: 16px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .bar .spacer { flex: 1; }
+  input, select, button.btn { font: inherit; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  button.btn { cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  button.danger { color: var(--danger); }
+  button.btn:hover { filter: brightness(0.96); }
+  label.chk { display: flex; gap: 6px; align-items: center; color: var(--muted); }
+  .table-wrap { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.actions { text-align: right; }
+  td.actions button { margin-left: 4px; padding: 4px 9px; }
+  .pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 13px; font-weight: 600; background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+  .pill.low { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+  .pill.out { background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); }
+  .empty { padding: 28px; text-align: center; color: var(--muted); }
+  dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--text); padding: 20px; width: min(420px, calc(100vw - 32px)); }
+  dialog::backdrop { background: rgba(0,0,0,.45); }
+  dialog h2 { margin: 0 0 12px; font-size: 18px; }
+  dialog label { display: block; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
+  dialog label input, dialog label select { display: block; width: 100%; margin-top: 3px; color: var(--text); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+  #toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity .2s; max-width: calc(100vw - 32px); z-index: 10; }
+  #toast.show { opacity: 1; }
+  #toast.err { background: var(--danger); color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <div class="head-row">
+    <div>
+      <h1>Laptop-Verkauf</h1>
+      <p>Oberfläche für die REST-API · <a href="/swagger-ui.html">Swagger UI</a> · <a href="/h2-console">H2-Konsole</a></p>
+    </div>
+    <button id="theme-toggle" type="button" aria-label="Farbschema wechseln"><span class="ico" aria-hidden="true"></span><span class="lbl"></span></button>
+  </div>
+  <nav id="tabs">
+    <button data-tab="laptops" class="active">Laptops</button>
+    <button data-tab="customers">Kunden</button>
+    <button data-tab="sales">Verkäufe</button>
+  </nav>
+</header>
+
+<main>
+  <section id="laptops">
+    <div class="bar">
+      <input id="f-brand" placeholder="Marke (z. B. HP)" size="14">
+      <input id="f-price" type="number" min="0" placeholder="Max. Preis €" style="width:130px">
+      <label class="chk"><input id="f-low" type="checkbox"> nur Bestand unter 3</label>
+      <span class="spacer"></span>
+      <button class="btn primary" id="new-laptop">+ Neuer Laptop</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Laptop</th><th>CPU</th><th class="num">RAM / SSD</th><th class="num">Preis</th><th class="num">Bestand</th><th></th></tr></thead>
+      <tbody id="laptop-rows"></tbody>
+    </table></div>
+  </section>
+
+  <section id="customers" hidden>
+    <div class="bar"><span class="spacer"></span><button class="btn primary" id="new-customer">+ Neuer Kunde</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>E-Mail</th><th></th></tr></thead>
+      <tbody id="customer-rows"></tbody>
+    </table></div>
+  </section>
+
+  <section id="sales" hidden>
+    <div class="bar"><span class="spacer"></span><button class="btn primary" id="new-sale">+ Neuer Verkauf</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Datum</th><th>Kunde</th><th>Laptop</th><th class="num">Menge</th><th class="num">Gesamt</th><th></th></tr></thead>
+      <tbody id="sale-rows"></tbody>
+    </table></div>
+  </section>
+</main>
+
+<dialog id="dlg-laptop">
+  <form method="dialog" id="form-laptop">
+    <h2>Neuer Laptop</h2>
+    <div class="row2">
+      <label>Marke<input name="brand" required></label>
+      <label>Modell<input name="model" required></label>
+    </div>
+    <label>CPU<input name="cpu"></label>
+    <div class="row2">
+      <label>RAM (GB)<input name="ramGb" type="number" min="1" value="16" required></label>
+      <label>SSD (GB)<input name="storageGb" type="number" min="1" value="512" required></label>
+    </div>
+    <div class="row2">
+      <label>Preis (€)<input name="price" type="number" min="0.01" step="0.01" required></label>
+      <label>Bestand<input name="stock" type="number" min="0" value="1" required></label>
+    </div>
+    <div class="dlg-actions"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn primary">Speichern</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-customer">
+  <form method="dialog" id="form-customer">
+    <h2>Neuer Kunde</h2>
+    <label>Name<input name="name" required></label>
+    <label>E-Mail<input name="email" type="email" required></label>
+    <div class="dlg-actions"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn primary">Speichern</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-sale">
+  <form method="dialog" id="form-sale">
+    <h2>Laptop verkaufen</h2>
+    <label>Laptop<select name="laptop" required></select></label>
+    <label>Kunde<select name="customer" required></select></label>
+    <label>Menge<input name="quantity" type="number" min="1" value="1" required></label>
+    <div class="dlg-actions"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn primary">Verkaufen</button></div>
+  </form>
+</dialog>
+
+<div id="toast"></div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const eur = n => new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(n);
+const datum = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('de-AT') : '';
+let laptops = [], customers = [], sales = [];
+
+function toast(msg, err) {
+  const t = $('#toast'); t.textContent = msg; t.className = 'show' + (err ? ' err' : '');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.className = '', 3200);
+}
+
+async function api(method, url, body) {
+  const res = await fetch(url, { method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  if (res.status === 204) return null;
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || ('Fehler ' + res.status));
+  return data;
+}
+const run = async (fn, okMsg) => { try { await fn(); if (okMsg) toast(okMsg); } catch (e) { toast(e.message, true); } };
+
+function el(tag, props = {}, ...kids) {
+  const n = Object.assign(document.createElement(tag), props);
+  kids.forEach(k => n.append(k));
+  return n;
+}
+function cell(content, cls) { return el('td', cls ? { className: cls } : {}, content); }
+function actionBtn(label, onclick, danger) { return el('button', { className: 'btn' + (danger ? ' danger' : ''), textContent: label, onclick }); }
+function emptyRow(cols, text) { const td = el('td', { colSpan: cols, className: 'empty', textContent: text }); return el('tr', {}, td); }
+
+async function loadAll() {
+  [laptops, customers, sales] = await Promise.all([api('GET', laptopUrl()), api('GET', '/api/customers'), api('GET', '/api/sales')]);
+  render();
+}
+function laptopUrl() {
+  const brand = $('#f-brand').value.trim(), price = $('#f-price').value;
+  if (brand) return '/api/laptops?brand=' + encodeURIComponent(brand);
+  if (price) return '/api/laptops?maxPrice=' + encodeURIComponent(price);
+  if ($('#f-low').checked) return '/api/laptops?lowStockBelow=3';
+  return '/api/laptops';
+}
+
+function render() {
+  const lb = $('#laptop-rows'); lb.replaceChildren();
+  if (!laptops.length) lb.append(emptyRow(6, 'Keine Laptops gefunden'));
+  laptops.forEach(l => {
+    const cls = l.stock === 0 ? 'out' : l.stock < 3 ? 'low' : '';
+    const tr = el('tr', {},
+      cell(el('strong', { textContent: l.brand + ' ' + l.model })),
+      cell(l.cpu || ''),
+      cell(l.ramGb + ' GB / ' + l.storageGb + ' GB', 'num'),
+      cell(eur(l.price), 'num'),
+      cell(el('span', { className: 'pill ' + cls, textContent: l.stock }), 'num'),
+      cell('', 'actions'));
+    const act = tr.lastChild;
+    act.append(actionBtn('Verkaufen', () => openSale(l.id)), actionBtn('Löschen', () => run(async () => { await api('DELETE', '/api/laptops/' + l.id); await loadAll(); }, 'Laptop gelöscht'), true));
+    lb.append(tr);
+  });
+
+  const cb = $('#customer-rows'); cb.replaceChildren();
+  if (!customers.length) cb.append(emptyRow(3, 'Noch keine Kunden'));
+  customers.forEach(c => {
+    const tr = el('tr', {}, cell(c.name), cell(c.email), cell('', 'actions'));
+    tr.lastChild.append(actionBtn('Löschen', () => run(async () => { await api('DELETE', '/api/customers/' + c.id); await loadAll(); }, 'Kunde gelöscht'), true));
+    cb.append(tr);
+  });
+
+  const sb = $('#sale-rows'); sb.replaceChildren();
+  if (!sales.length) sb.append(emptyRow(6, 'Noch keine Verkäufe'));
+  [...sales].reverse().forEach(s => {
+    const tr = el('tr', {}, cell(datum(s.saleDate)), cell(s.customer.name), cell(s.laptop.brand + ' ' + s.laptop.model),
+      cell(String(s.quantity), 'num'), cell(eur(s.totalPrice), 'num'), cell('', 'actions'));
+    tr.lastChild.append(actionBtn('Stornieren', () => run(async () => { await api('DELETE', '/api/sales/' + s.id); await loadAll(); }, 'Verkauf storniert, Bestand zurückgebucht'), true));
+    sb.append(tr);
+  });
+}
+
+// Tabs
+$('#tabs').addEventListener('click', e => {
+  const b = e.target.closest('button[data-tab]'); if (!b) return;
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('active', x === b));
+  ['laptops', 'customers', 'sales'].forEach(id => $('#' + id).hidden = id !== b.dataset.tab);
+});
+
+// Filter (immer nur ein Filter gleichzeitig, wie in der API)
+['f-brand', 'f-price'].forEach(id => $('#' + id).addEventListener('input', () => { if ($('#' + id).value) { $('#f-low').checked = false; ['f-brand', 'f-price'].filter(x => x !== id).forEach(x => $('#' + x).value = ''); } run(loadAll); }));
+$('#f-low').addEventListener('change', () => { if ($('#f-low').checked) { $('#f-brand').value = ''; $('#f-price').value = ''; } run(loadAll); });
+
+// Dialoge
+document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+const formData = f => Object.fromEntries(new FormData(f));
+
+$('#new-laptop').onclick = () => { $('#form-laptop').reset(); $('#dlg-laptop').showModal(); };
+$('#form-laptop').addEventListener('submit', e => {
+  const d = formData(e.target);
+  run(async () => {
+    await api('POST', '/api/laptops', { brand: d.brand, model: d.model, cpu: d.cpu, ramGb: +d.ramGb, storageGb: +d.storageGb, price: +d.price, stock: +d.stock });
+    await loadAll();
+  }, 'Laptop angelegt');
+});
+
+$('#new-customer').onclick = () => { $('#form-customer').reset(); $('#dlg-customer').showModal(); };
+$('#form-customer').addEventListener('submit', e => {
+  const d = formData(e.target);
+  run(async () => { await api('POST', '/api/customers', { name: d.name, email: d.email }); await loadAll(); }, 'Kunde angelegt');
+});
+
+async function openSale(laptopId) {
+  const all = await api('GET', '/api/laptops');
+  const f = $('#form-sale'); f.reset();
+  f.laptop.replaceChildren(...all.map(l => el('option', { value: l.id, textContent: `${l.brand} ${l.model} (${l.stock} auf Lager, ${eur(l.price)})` })));
+  f.customer.replaceChildren(...customers.map(c => el('option', { value: c.id, textContent: c.name })));
+  if (laptopId) f.laptop.value = laptopId;
+  if (!customers.length) return toast('Bitte zuerst einen Kunden anlegen', true);
+  $('#dlg-sale').showModal();
+}
+$('#new-sale').onclick = () => run(() => openSale());
+$('#form-sale').addEventListener('submit', e => {
+  const d = formData(e.target);
+  run(async () => {
+    await api('POST', '/api/sales', { quantity: +d.quantity, customer: { id: +d.customer }, laptop: { id: +d.laptop } });
+    await loadAll();
+  }, 'Verkauf gespeichert');
+});
+
+// Light/Dark: Latte <-> Macchiato
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  $('#theme-toggle .ico').textContent = t === 'dark' ? '☾' : '☀';
+  $('#theme-toggle .lbl').textContent = t === 'dark' ? 'Macchiato' : 'Latte';
+  $('#theme-toggle').setAttribute('aria-pressed', t === 'dark');
+}
+applyTheme(document.documentElement.getAttribute('data-theme'));
+$('#theme-toggle').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
+});
+
+run(loadAll);
+</script>
+</body>
+</html>

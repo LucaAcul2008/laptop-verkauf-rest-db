@@ -27,6 +27,7 @@ mvn spring-boot:run
 
 | Was | URL |
 |---|---|
+| Web-Oberfläche (Laptop-Shop) | http://localhost:5001/ |
 | REST-API | http://localhost:5001/api/... |
 | OpenAPI-Dashboard (Swagger UI) | http://localhost:5001/swagger-ui.html |
 | OpenAPI-JSON | http://localhost:5001/v3/api-docs |
@@ -34,11 +35,12 @@ mvn spring-boot:run
 
 H2-Konsole Login: JDBC URL `jdbc:h2:mem:laptopdb`, User `sa`, Passwort leer.
 Die Datenbank liegt nur im Arbeitsspeicher, nach jedem Neustart wird sie frisch mit den Testdaten befüllt.
+Die Web-Oberfläche ist eine einzelne HTML-Datei (`src/main/resources/static/index.html`) ohne Build-Schritt, im Farbschema [Catppuccin](https://catppuccin.com/) (Latte hell, Macchiato dunkel, Umschalter oben rechts, Auswahl wird im Browser gemerkt). Sie ruft dieselbe REST-API per `fetch` auf. Fehlermeldungen der API (z. B. „Nicht genug auf Lager“) erscheinen dort als rote Meldung.
 Fertige Beispielaufrufe liegen in [`requests.http`](requests.http) (IntelliJ / VS Code REST Client).
 
 Tests: `mvn test`
 
-**Tech Stack:** Java 21 · Spring Boot 3.5 (Web, Data JPA, Validation) · H2 In-Memory · springdoc-openapi (Swagger UI)
+**Tech Stack:** Java 21 · Spring Boot 3.5 (Web, Data JPA, Validation) · H2 In-Memory · springdoc-openapi (Swagger UI) · einfache Web-Oberfläche (HTML/JavaScript)
 
 ---
 
@@ -362,7 +364,7 @@ Die Schichten Entity, Repository, Service und Controller sind sauber getrennt. B
 * Kategorien (Gaming, Business, Convertible), Bilder und Beschreibung pro Laptop.
 * Gebrauchtgeräte-Ankauf (Zustand, Ankaufspreis) und Umsatzstatistik pro Monat.
 * Paginierung, Sortierung und Suche; Login mit Spring Security.
-* Frontend (z. B. React oder Flutter) auf Basis der OpenAPI-Beschreibung.
+* Größeres Frontend (z. B. React oder Flutter) auf Basis der OpenAPI-Beschreibung. Die mitgelieferte Oberfläche ist nur eine einfache Demo.
 
 ---
 
@@ -371,7 +373,7 @@ Die Schichten Entity, Repository, Service und Controller sind sauber getrennt. B
 | Bereich | Von KI erzeugt | Anpassung / Prüfung durch das Team |
 |---|---|---|
 | Projektidee und Datenmodell | Umsetzung der Idee „Laptop-Verkauf“ durch Claude | Thema wird im Team abgestimmt (Likes auf den Projektvorschlägen) |
-| Java-Code (Entities, Repositories, Services, Controller, Tests) | Erstellt von Claude (Anthropic) | Vom Team vor der Abgabe zu lesen, auszuführen und zu verstehen |
+| Java-Code (Entities, Repositories, Services, Controller, Tests) und Web-Oberfläche (`index.html`) | Erstellt von Claude (Anthropic) | Vom Team vor der Abgabe zu lesen, auszuführen und zu verstehen |
 | Diese Dokumentation und das ER-Diagramm | Erstellt von Claude (Anthropic) | Vom Team vor der Abgabe zu prüfen und zu ergänzen |
 | Vorlage (Aufbau von `task3-rest-patient-service`) | Von der Lehrkraft vorgegeben | – |
 
