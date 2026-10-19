@@ -2,7 +2,7 @@
 
 [![Build & Test](https://github.com/LucaAcul2008/laptop-verkauf-rest-db/actions/workflows/build.yml/badge.svg)](https://github.com/LucaAcul2008/laptop-verkauf-rest-db/actions/workflows/build.yml)
 
-Projekt „REST DB mit Spring Boot“ · HTL Saalfelden · Team: Luca Aigner & _(Teammitglied eintragen)_
+Projekt „REST DB mit Spring Boot“ · HTL Saalfelden · Team: Luca Aigner & _Jonathan Rath_
 
 > **KI-Kennzeichnung:** Dieses Projekt (Code, Tests und diese Dokumentation) wurde mit Unterstützung von
 > **Claude (Anthropic, KI)** erstellt. Alle KI-generierten Inhalte sind hier und in der Präsentation
