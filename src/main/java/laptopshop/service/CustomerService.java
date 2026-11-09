@@ -43,7 +43,8 @@ public class CustomerService {
 	public Customer update(Long id, Customer data) {
 		Customer existing = get(id);
 		if (!existing.getEmail().equalsIgnoreCase(data.getEmail())
-				&& customerRepository.existsByEmailIgnoreCase(data.getEmail())) {
+				&& customerRepository.existsByEmailIgnoreCase(data.getEmail())){
+			//wenn neue email aber neu schon vergeben
 			throw new ConflictException("E-Mail-Adresse ist schon vergeben");
 		}
 		existing.setName(data.getName());
