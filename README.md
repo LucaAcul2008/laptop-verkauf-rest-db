@@ -367,14 +367,3 @@ Die Schichten Entity, Repository, Service und Controller sind sauber getrennt. B
 * Größeres Frontend (z. B. React oder Flutter) auf Basis der OpenAPI-Beschreibung. Die mitgelieferte Oberfläche ist nur eine einfache Demo.
 
 ---
-
-## 6. KI-Nutzung
-
-| Bereich | Von KI erzeugt | Anpassung / Prüfung durch das Team |
-|---|---|---|
-| Projektidee und Datenmodell | Umsetzung der Idee „Laptop-Verkauf“ durch Claude | Thema wird im Team abgestimmt (Likes auf den Projektvorschlägen) |
-| Java-Code (Entities, Repositories, Services, Controller, Tests) und Web-Oberfläche (`index.html`) | Erstellt von Claude (Anthropic) | Vom Team vor der Abgabe zu lesen, auszuführen und zu verstehen |
-| Diese Dokumentation und das ER-Diagramm | Erstellt von Claude (Anthropic) | Vom Team vor der Abgabe zu prüfen und zu ergänzen |
-| Vorlage (Aufbau von `task3-rest-patient-service`) | Von der Lehrkraft vorgegeben | – |
-
-Hinweis: Die Tabelle ist vor der Abgabe vom Team zu ergänzen, falls weitere KI-Hilfe genutzt wurde.
